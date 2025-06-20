@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react'; // Removed useCallback
 import { Sparkles, Play } from 'lucide-react'; // Removed unused Upload icon
-import { BaseImage, PoseImage, GeneratedImage } from './types';
+import { BaseImage, PoseImage, GeneratedImage as AppGeneratedImage } from './types'; // Renamed to avoid conflict
 import { BaseImageGallery } from './components/BaseImageGallery';
 import { PoseImageUpload } from './components/PoseImageUpload';
 import { PromptEditor } from './components/PromptEditor';
@@ -8,16 +8,23 @@ import { GeneratedImageGrid } from './components/GeneratedImageGrid';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { useLocalStorage } from './hooks/useLocalStorage';
 // import { ImageService } from './services/imageService'; // Replaced with direct import
-import { generateImage as callGenerateImageApi, ImageInput } from './services/imageService'; // Import our service function and ImageInput type
+import { generateImage as callGenerateImageApi, ImageInput, GeneratedImage as ServiceGeneratedImage } from './services/imageService'; // Import service function, ImageInput, and ServiceGeneratedImage type
+
+// Define a more comprehensive type for what's stored in App's state
+interface DisplayableGeneratedImage extends AppGeneratedImage {
+  error?: string; // To store individual image errors
+  url?: string; // Make url optional as it might not exist if there's an error
+}
 
 function App() {
   const [baseImages, setBaseImages] = useLocalStorage<BaseImage[]>('base-images', []);
   const [selectedBaseImageId, setSelectedBaseImageId] = useState<string | null>(null);
   const [poseImage, setPoseImage] = useState<PoseImage | null>(null);
   const [prompt, setPrompt] = useState('');
-  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
+  // State to hold up to 10 images, or null if not yet generated/error
+  const [generatedImages, setGeneratedImages] = useState<(DisplayableGeneratedImage | null)[]>([]); 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generationError, setGenerationError] = useState<string | null>(null); // For displaying errors
+  const [generationError, setGenerationError] = useState<string | null>(null); // For overall generation process errors
   
   const baseImageInputRef = useRef<HTMLInputElement>(null);
   // const imageService = ImageService.getInstance(); // Removed
@@ -91,11 +98,44 @@ function App() {
     }
 
     setIsGenerating(true);
-    setGeneratedImages([]); // Clear previous images
-    setGenerationError(null); // Clear previous errors
+    setGeneratedImages(Array(10).fill(null)); // Initialize for 10 images
+    setGenerationError(null); // Clear previous overall errors
+
+    const currentPrompt = prompt.trim();
+    const currentSelectedBaseId = selectedBaseImageId;
+    const currentPoseImageId = poseImage?.id;
+
+    // Define the callback for image generation
+    const handleImageGenerated = (result: ServiceGeneratedImage, index: number) => {
+      setGeneratedImages(prevImages => {
+        const newImages = [...prevImages];
+        if (result.base64Data) {
+          newImages[index] = {
+            id: `gen-${Date.now()}-${index}`,
+            url: `data:image/png;base64,${result.base64Data}`, // Assuming PNG
+            prompt: currentPrompt,
+            baseImageId: currentSelectedBaseId || "N/A",
+            poseImageId: currentPoseImageId || "N/A",
+            generatedAt: new Date(),
+            error: undefined,
+          };
+        } else {
+          newImages[index] = {
+            id: `gen-error-${Date.now()}-${index}`,
+            prompt: currentPrompt,
+            baseImageId: currentSelectedBaseId || "N/A",
+            poseImageId: currentPoseImageId || "N/A",
+            generatedAt: new Date(),
+            error: result.error || "Unknown error for this image",
+            url: undefined, // No URL if there's an error
+          };
+        }
+        return newImages;
+      });
+    };
 
     try {
-      const selectedBase = baseImages.find(img => img.id === selectedBaseImageId);
+      const selectedBase = baseImages.find(img => img.id === currentSelectedBaseId);
 
       if (!selectedBase || !selectedBase.file) {
         setGenerationError("Selected base image file is missing.");
@@ -120,39 +160,32 @@ function App() {
       const baseImageInput = await fileToImageInput(selectedBase.file);
       const poseImageInput = await fileToImageInput(poseImage.file);
 
-      // Call our new service function
-      const result = await callGenerateImageApi({
-        prompt: prompt.trim(),
+      // Call our new service function with the callback
+      await callGenerateImageApi({
+        prompt: currentPrompt,
         baseImage: baseImageInput,
         poseImage: poseImageInput,
+        onImageGenerated: handleImageGenerated,
       });
 
-      if (result.base64Data) {
-        const newGeneratedImage: GeneratedImage = {
-          id: `gen-${Date.now()}`,
-          url: `data:image/png;base64,${result.base64Data}`, // Assuming PNG, adjust if mimeType is available from API
-          prompt: prompt.trim(),
-          baseImageId: selectedBaseImageId || "N/A", // Use selected or a placeholder
-          poseImageId: poseImage?.id || "N/A",   // Use selected or a placeholder
-          generatedAt: new Date(),
-        };
-        setGeneratedImages([newGeneratedImage]); // Display the new image
-      } else if (result.error) {
-        console.error('Generation failed:', result.error);
-        setGenerationError(result.error);
-        alert(`Image generation failed: ${result.error}`);
-      } else {
-        console.error('Generation failed: Unknown error from service');
-        setGenerationError('Unknown error occurred during image generation.');
-        alert('Image generation failed: Unknown error.');
-      }
+      // Note: Individual image results/errors are handled by the callback.
+      // This catch block is for setup errors or unexpected errors from callGenerateImageApi itself.
     } catch (error) {
-      console.error('Generation failed unexpectedly:', error);
+      console.error('Generation process failed unexpectedly:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
-      setGenerationError(`An unexpected error occurred: ${errorMessage}`);
-      alert(`Image generation failed: ${errorMessage}`);
+      setGenerationError(`An unexpected error occurred during the generation setup: ${errorMessage}`);
+      // Optionally, fill remaining nulls with error states if the process aborts early
+      setGeneratedImages(prev => prev.map(img => img === null ? ({
+        id: `gen-setup-error-${Date.now()}`,
+        prompt: currentPrompt,
+        baseImageId: currentSelectedBaseId || "N/A",
+        poseImageId: currentPoseImageId || "N/A",
+        generatedAt: new Date(),
+        error: `Generation process aborted: ${errorMessage}`,
+        url: undefined,
+      }) : img));
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false); // Set to false after all 10 attempts are done (or failure)
     }
   };
 
@@ -265,7 +298,7 @@ function App() {
                   <div className="text-sm text-gray-500">Base Images</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{generatedImages.length}</div>
+                  <div className="text-2xl font-bold text-purple-600">{generatedImages.filter(img => img && !img.error && img.url).length}</div>
                   <div className="text-sm text-gray-500">Generated</div>
                 </div>
               </div>
@@ -282,7 +315,7 @@ function App() {
         {/* Generated Images */}
         <div className="mt-12 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <GeneratedImageGrid
-            images={generatedImages}
+            images={generatedImages.filter(img => img !== null) as AppGeneratedImage[]}
             loading={isGenerating}
           />
         </div>

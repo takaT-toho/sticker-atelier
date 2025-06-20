@@ -15,7 +15,7 @@ export interface PoseImage {
 
 export interface GeneratedImage {
   id: string;
-  url: string;
+  url?: string; // Made url optional
   prompt: string;
   baseImageId: string;
   poseImageId: string;
