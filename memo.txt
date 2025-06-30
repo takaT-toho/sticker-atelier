@@ -1,0 +1,5 @@
+DOCKER_BUILDKIT=1 docker build --secret id=gemini_api_key,src=.gemini_secret -t asia-northeast1-docker.pkg.dev/alljapanaihackathon/parallel-img-gen/img-gen-react-app:latest .
+
+docker push asia-northeast1-docker.pkg.dev/alljapanaihackathon/parallel-img-gen/img-gen-react-app:latest
+
+gcloud run deploy pose-img-gen --image asia-northeast1-docker.pkg.dev/alljapanaihackathon/parallel-img-gen/img-gen-react-app:latest --platform managed --allow-unauthenticated

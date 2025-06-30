@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Environment variables
 .env
+.gemini_secret
 
 node_modules
 dist

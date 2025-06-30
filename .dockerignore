@@ -1,0 +1,11 @@
+# Ignore dependencies and build artifacts
+node_modules
+dist
+
+# Ignore environment variables and Docker specific files
+.env
+Dockerfile
+
+# Ignore version control files
+.git
+.gitignore
