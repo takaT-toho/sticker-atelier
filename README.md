@@ -5,10 +5,10 @@
 This project is an innovative AI image generation application that allows you to create new images by combining a base character image, a pose reference image, and a text prompt. It leverages Google's powerful generative AI to bring your ideas to life with unprecedented control and creativity.
 
 Base image:
-<img src="media/sample-base-image.jpeg" alt="Base image" width="100%">
+<img src="media/sample-base-image.jpeg" alt="Base image" width="50%">
 
 Pose image:
-<img src="media/sample-pose-image.jpeg" alt="Base image" width="100%">
+<img src="media/sample-pose-image.jpeg" alt="Base image" width="50%">
 
 Generated images:
 <img src="media/sample-image3.png" alt="App Screenshot" width="100%">
