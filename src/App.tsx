@@ -20,7 +20,7 @@ function App() {
   const [baseImages, setBaseImages] = useLocalStorage<BaseImage[]>('base-images', []);
   const [selectedBaseImageId, setSelectedBaseImageId] = useState<string | null>(null);
   const [poseImage, setPoseImage] = useState<PoseImage | null>(null);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState('Extract the distinctive elements from the pose image and apply them to the base image to generate a new image.');
   // State to hold up to 10 images, or null if not yet generated/error
   const [generatedImages, setGeneratedImages] = useState<(DisplayableGeneratedImage | null)[]>([]); 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -223,8 +223,9 @@ function App() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Inputs */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Base Images */}
+            {/* Step 1: Base Images */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">1. Select Base Character</h2>
               <BaseImageGallery
                 images={baseImages}
                 selectedImageId={selectedBaseImageId}
@@ -234,8 +235,9 @@ function App() {
               />
             </div>
 
-            {/* Pose Image Upload */}
+            {/* Step 2: Pose Image Upload */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">2. Upload Pose</h2>
               <PoseImageUpload
                 poseImage={poseImage}
                 onImageUpload={handlePoseImageUpload}
@@ -243,8 +245,9 @@ function App() {
               />
             </div>
 
-            {/* Prompt Editor */}
+            {/* Step 3: Prompt Editor */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">3. Write Prompt</h2>
               <PromptEditor
                 prompt={prompt}
                 onPromptChange={setPrompt}
@@ -278,13 +281,8 @@ function App() {
               </button>
               
               {!canGenerate && !isGenerating && (
-                <div className="mt-3 text-sm text-gray-500 space-y-1">
-                  <p>To generate images, you need:</p>
-                  <ul className="list-disc list-inside space-y-1 ml-2">
-                    {!selectedBaseImageId && <li>Select a base image</li>}
-                    {!poseImage && <li>Upload a pose image</li>}
-                    {!prompt.trim() && <li>Enter a text prompt</li>}
-                  </ul>
+                <div className="mt-3 text-sm text-center text-gray-500 space-y-1">
+                  <p className="font-semibold">Complete steps 1-3 to enable generation.</p>
                 </div>
               )}
             </div>

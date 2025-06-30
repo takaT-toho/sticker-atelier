@@ -4,8 +4,14 @@
 
 This project is an innovative AI image generation application that allows you to create new images by combining a base character image, a pose reference image, and a text prompt. It leverages Google's powerful generative AI to bring your ideas to life with unprecedented control and creativity.
 
-<img src="https://user-images.githubusercontent.com/12345678/123456789-abcdef.png" alt="App Screenshot" width="100%">
-<!-- ↑ あとで実際のスクリーンショットに差し替えてください -->
+Base image:
+<img src="media/sample-base-image.jpeg" alt="Base image" width="100%">
+
+Pose image:
+<img src="media/sample-pose-image.jpeg" alt="Base image" width="100%">
+
+Generated images:
+<img src="media/sample-image3.png" alt="App Screenshot" width="100%">
 
 ## 💡 Concept: Deepen Bonds by Co-creating LINE Stickers
 
