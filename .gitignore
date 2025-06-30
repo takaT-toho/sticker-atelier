@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Environment variables
 .env
+.env.production
 .gemini_secret
 
 node_modules
