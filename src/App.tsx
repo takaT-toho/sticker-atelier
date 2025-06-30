@@ -202,11 +202,11 @@ function App() {
               <Sparkles size={32} className="text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              AI Image Generator
+              Sticker Atelier
             </h1>
           </div>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Transform your ideas into stunning visuals by combining base images with pose references and creative prompts
+            This project is an innovative AI image generation application that allows you to create new images by combining a base character image, a pose reference image, and a text prompt.
           </p>
         </header>
 

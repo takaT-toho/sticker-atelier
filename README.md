@@ -1,6 +1,6 @@
 # Sticker Atelier (ステッカーアトリエ)
 
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U2ZJ4O8)
+[![sticker-atelier](media/logo1.svg)](media/logo1.svg)
 
 This project is an innovative AI image generation application that allows you to create new images by combining a base character image, a pose reference image, and a text prompt. It leverages Google's powerful generative AI to bring your ideas to life with unprecedented control and creativity.
 

@@ -1,0 +1,25 @@
+<svg width="250" height="100" viewBox="0 0 250 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- 
+    sticker atelier ロゴ：タイポグラフィ中心
+    カラー設定：
+    - "i"の点（ステッカー）: fill="#00C49F" (緑)
+    - "sticker"の他の部分: fill="#333" (濃いグレー)
+    - "atelier": fill="#777" (グレー)
+  -->
+  <g font-family="'Avenir Next', 'Avenir', 'Helvetica', sans-serif">
+    <!-- テキスト：st -->
+    <text x="30" y="60" font-size="40" font-weight="600" fill="#333">st</text>
+    <!-- テキスト：cker -->
+    <text x="106" y="60" font-size="40" font-weight="600" fill="#333">cker</text>
+    
+    <!-- 文字 "i" の点（ステッカー） -->
+    <rect x="85" y="22" width="18" height="18" rx="3" ry="3" fill="#00C49F"/>
+    <!-- 文字 "i" の棒 -->
+    <rect x="88" y="45" width="12" height="23" rx="3" ry="3" fill="#333"/>
+  </g>
+  
+  <!-- "atelier" テキスト (セリフ体) -->
+  <text x="195" y="60" font-family="'Times New Roman', serif" font-style="italic" font-size="24" fill="#777" text-anchor="end">
+    atelier
+  </text>
+</svg>

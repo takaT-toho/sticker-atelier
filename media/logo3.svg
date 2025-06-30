@@ -1,0 +1,39 @@
+<svg width="250" height="100" viewBox="0 0 250 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- 
+    sticker atelier ロゴ：シンプル＆モダン
+    カラー設定：
+    - ステッカー本体: fill="#4A90E2" (青)
+    - ステッカー裏面: fill="#B5D8FF" (薄い青)
+    - テキスト(sticker): fill="#333" (濃いグレー)
+    - テキスト(atelier): fill="#555" (グレー)
+  -->
+
+  <!-- ロゴアイコン：めくれたステッカー -->
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="1" dy="1" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.5"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(20, 15)" filter="url(#shadow)">
+    <!-- ステッカー本体 -->
+    <path d="M 0 0 H 60 V 60 H 0 Z" fill="#4A90E2"/>
+    <!-- めくれた部分（裏側） -->
+    <path d="M 60 0 L 40 0 L 60 20 Z" fill="#B5D8FF"/>
+    <!-- めくれた部分の影 -->
+    <path d="M 40 0 L 60 20 V 0 Z" fill="#000" opacity="0.1"/>
+  </g>
+
+  <!-- テキスト -->
+  <g transform="translate(100, 35)">
+    <text y="20" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="bold" fill="#333">sticker</text>
+    <text y="45" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#555">atelier</text>
+  </g>
+</svg>
