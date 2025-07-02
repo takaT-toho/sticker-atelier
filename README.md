@@ -65,6 +65,11 @@ This project was developed using **Cline** with **gemini-2.5-pro-preview-05-06**
     VITE_GEMINI_API_KEY=YOUR_GOOGLE_AI_API_KEY
     ```
 
+    Create a `.gemini_secret` file in the root of the project and add your Google AI API key:
+    ```
+    YOUR_GOOGLE_AI_API_KEY
+    ```
+
 4.  **Run the development server:**
     ```bash
     npm run dev
