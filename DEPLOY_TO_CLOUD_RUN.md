@@ -99,7 +99,7 @@ gcloud run deploy [SERVICE_NAME] \
 3.  **Cloud Runサービスの更新:**
     再度`gcloud run deploy`コマンドを実行します。Cloud Runは同じサービス名でデプロイされたことを検知し、新しいイメージを使用してサービスを更新します。
     ```bash
-gcloud run deploy [SERVICE_NAME] \
+    gcloud run deploy [SERVICE_NAME] \
       --image [YOUR_REGION]-docker.pkg.dev/[YOUR_PROJECT_ID]/[REPOSITORY_NAME]/[IMAGE_NAME]:latest \
       --platform managed \
       --allow-unauthenticated
